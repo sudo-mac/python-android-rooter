@@ -1,0 +1,25 @@
+def flash(self):
+    print("\nFlashing...")
+    subprocess.run(
+        ["./install.sh"],
+        cwd="/run/media/dex/e-Garage/Android/Pixel4/OEM-A13-Magisk/",
+        capture_output=True,
+        text=True,
+    )
+
+def unlock(self):
+    subprocess.run(
+        ["./install.sh"],
+        cwd="/run/media/dex/e-Garage/Android/Pixel4/OEM-A13-Magisk/",
+        capture_output=True,
+        text=True,
+    )
+    status = subprocess.run(
+        ["fastboot getvar all"], shell=True, capture_output=True, text=True
+    )
+    unlocked = re.search(r"unlocked:(\w+)", status.stderr).group(1) == "yes"
+
+    if not unlocked:
+        status = subprocess.run(["fastboot flashing unlock"])
+    else:
+        print("Bootloader already unlocked.")
